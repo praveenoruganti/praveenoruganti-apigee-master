@@ -1,0 +1,153 @@
+swagger: '2.0'
+info:
+  description: "This API is used to process the billing of an order"
+  version: '1.0'
+  title: "Billing Service API"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+     name: Praveen Oruganti
+     url: https://praveenorugantitech.blogspot.com
+     email: mnp3pk@gmail.com  
+host: billing-service-api.cfapps.io
+basePath: "/"
+paths:
+  /api/v1_0/billingorder:
+    post:
+      tags:
+        - Process Billing Order
+      summary: Process Billing Order
+      description: |
+   
+       Billing Service API is used to process the billing of an order
+       
+       This API accepts the below fields as a part of the request.       
+       
+       * __appId__ : App id should be characters and mandatory
+       * __orderId__ : Order id should be numeric
+       * __transactionId__ :  transaction Id should be characters and mandatory
+       * __totalPrice__ : total price of the order and it needs to be with 2 decimals
+      operationId: processBillingOrderUsingPOST
+      consumes:
+       - application/json
+      produces:
+       - application/json
+      parameters:
+      - in:  body
+        name: billingRequest
+        description: billingRequest
+        required: true
+        schema:
+          $ref: '#/definitions/BillingRequest'
+      responses:
+        '200':
+          description: OK
+          schema: 
+           $ref: '#/definitions/BillingResponse'
+        '400':
+          description: Input Request Validation Failures
+          schema: 
+           $ref: '#/definitions/BillingResponse'
+        '404':
+          description: Not Found
+          schema: 
+           $ref: '#/definitions/BillingResponse'           
+        '500':
+          description: Internal/External Service Failures
+          schema: 
+           $ref: '#/definitions/BillingResponse'
+      deprecated: false
+definitions:
+  BillingRequest:
+     type: object
+     required:
+       - appId
+       - orderId
+       - transactionId
+       - totalPrice
+     properties:
+        appId:
+         type: string
+         example: OrderManagement
+         description: App id should be characters and mandatory
+        orderId:
+         type: string
+         example: 100
+         description: Order id should be numeric
+        transactionId:
+         type: string
+         example: test_123
+         description: transaction Id should be characters and mandatory
+        totalPrice:
+         type: string
+         example: 100.35
+         description: total price of the order and it needs to be with 2 decimals
+  BillingResponseData: 
+        type: object
+        required:
+         - executed             
+        properties:
+           executed: 
+            type: boolean
+            example: true
+            description: This denotes whether billing order transaction is executed successfully or not
+  ErrorMessageBillingOrder:
+       type: object
+       required:
+         - code
+         - description
+         - errors
+       properties:
+         code:
+          type: string
+          example: 4000
+          description: '4000,5000,6000,7000'
+         description:
+          type: string
+          example: Input Validation Failure
+          description: 'Input Request Validation Failure, Internal Service Failure, External Service Failure'
+         errors:
+          type: object
+          example:
+            '400002': Request Method is not allowed
+          description: |
+           {
+                400001: Request Json is malformed or invalid
+                400002: Request Method is not allowed
+                400003: Dynamic Content type not supported
+                400004: Invalid Order ID
+                400005: Invalid Transaction Id and max length should be less then 20
+                400006: Invalid App ID, allowed app ids ${appIds}
+                400007: Invalid Amount and it needs to be with 2 decimals max
+           
+           }
+  BillingResponse:
+     type: object
+     required:
+       - status
+       - orderId
+       - transactionId
+       - appId
+     properties:
+        status:
+         type: string
+         example: Success
+         description: Status of the Transaction          
+        orderId:
+         type: string
+         example: 100
+         description: Order id should be numeric
+        transactionId:
+         type: string
+         example: test_123
+         description: transaction Id should be characters and mandatory
+        appId:
+         type: string
+         example: OrderManagement
+         description: App id should be characters and mandatory
+        data:
+          description: Response Data for this transaction
+          $ref: '#/definitions/BillingResponseData'
+        errors:
+          description: Error Structure for Process Billing Order
+          $ref: '#/definitions/ErrorMessageBillingOrder'
+ 
