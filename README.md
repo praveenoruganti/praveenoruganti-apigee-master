@@ -1,5 +1,4 @@
-# praveenoruganti-apigee-master
-Praveen Oruganti Apigee
+# All About Apigee
 
 ### [Buy me a Book](https://bit.ly/388sUbE)
 
