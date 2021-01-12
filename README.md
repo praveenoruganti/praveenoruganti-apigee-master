@@ -1,4 +1,4 @@
-# All About Apigee
+# Apigee Course
 
 
 
